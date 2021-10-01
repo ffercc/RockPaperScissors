@@ -3,20 +3,19 @@ const USER_WINS = 0;
 const CPU_WINS = 1;
 const TIE = 2;
 
+var numberOfUserVictories = 0;
+var numberOfCPUVictories = 0;
+
+/*
 function isString(value) {
 	return typeof value === 'string' || value instanceof String;
 }
+*/
 
-function userPlay() {
-	/* get input from console */
-//	let playerSelection = (prompt("Select: ROCK[R]/ PAPER[P] / SCISSORS?[S]")).toUpperCase();
-	let playerSelection = prompt("Select: ROCK[R]/ PAPER[P] / SCISSORS?[S]");
-	playerSelection = playerSelection.toUpperCase();
-	while (! isString(playerSelection) || ! playerSelection.startsWith("R") && ! playerSelection.startsWith("P")  && ! playerSelection.startsWith("S") ) {
-		console.log("I don't understand. Try again...");
-		playerSelection = prompt("Select: ROCK[R]/ PAPER[P] / SCISSORS?[S]");
-		playerSelection = playerSelection.toUpperCase();
-	}
+function userPlay(event) {
+	/* get input from mouse click */
+	let playerSelection = event.currentTarget.dataset.key;
+	playSound(event); // play sound
 	switch (playerSelection.charAt(0)) {
 		case "R":
 			 playerSelection = "ROCK";
@@ -102,19 +101,86 @@ function playRound(playerSelection, CPUSelection) {
 	return winner;
 }
 
-function game() {
+function playGame(event) {
 	
-	let winner = playRound(userPlay(), computerPlay());
+	let playerSelection = userPlay(event);
+	let CPUSelection = computerPlay();
+	
+	let winner = playRound(playerSelection, CPUSelection);
+	
 	if (winner == USER_WINS) {
 		console.log("USER wins");
+		numberOfUserVictories++;
+		winner = "USER";
 	} else if (winner == CPU_WINS) {
 		console.log("CPU wins");
+		numberOfCPUVictories++;
+		winner = "CPU";
 	} else {
 		console.log("It's a Tie!");
+		winner = "TIE";
+	}
+	printStats(playerSelection, CPUSelection, numberOfUserVictories, numberOfCPUVictories, winner);
+}
+
+function printStats(playerSelection, CPUSelection, numberOfUserVictories, numberOfCPUVictories, winner) {
+
+	document.getElementById("playerSelection").innerText = playerSelection;
+	document.getElementById("CPUSelection").innerText = CPUSelection;
+	document.getElementById("numberOfUserVictories").innerText = numberOfUserVictories;
+	document.getElementById("numberOfCPUVictories").innerText = numberOfCPUVictories;
+	document.getElementById("winner").innerText = winner;
+}
+
+function resetStats() {
+	event.currentTarget.classList.add("playing");
+	numberOfUserVictories = 0;
+	numberOfCPUVictories = 0;
+	printStats("-", "-", numberOfUserVictories, numberOfCPUVictories, "-");
+}
+
+/*
+for (let i = 1 ; i <= 5; i++) {
+	playGame();
+}*/
+
+// Add mouse event listeners to each 'div'
+let buttons = document.querySelectorAll(".button");
+buttons.forEach( function (button) {
+	button.addEventListener("mousedown", playGame);
+	button.addEventListener("mouseup", removeClassPlaying);
+});
+
+let resetButton = document.querySelector(".resetButton");
+resetButton.addEventListener("mousedown", resetStats);
+resetButton.addEventListener("mouseup", removeClassPlaying);
+
+// Play sound according to data-key
+function playSound(event) {
+	let audio = null;
+	if (event.type == "mousedown") {
+		event.currentTarget.classList.add("playing");
+		// currentTarget devuelve el elemento que recibe la respuesta del evento (aunque clickeemos en uno de sus hijos), es decir el 'div' que es donde hemos añadido los eventListeners
+		audio = document.querySelector("audio[data-key='" + event.currentTarget.dataset.key + "']");
+		// add class 'playing' for visual effect
+		event.currentTarget.classList.add("playing");
+	}
+	let promise = audio.play();
+	if (promise !== undefined) {
+		promise.then (_ => {
+		// Autoplay started!
+		console.log("Autoplay started!");
+		}).catch(error => {
+		// Autoplay was prevented.
+		// Show a "Play" button so that user can start playback.
+		console.log("Autoplay was prevented.");
+		});
 	}
 }
 
-for (let i = 1 ; i <= 5; i++) {
-	game();
+function removeClassPlaying(event) {
+	if (event.type == "mouseup") {
+		event.currentTarget.classList.remove("playing");
+	}
 }
 

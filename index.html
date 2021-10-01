@@ -1,15 +1,50 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Rock Paper Scissors</title>
-	<link rel="stylesheet" href="style.css">
-</head>
-<body>
-	<div id="cuerpo">
-		<script src="./game.js"></script>
-	</div>
-</body>
+	<head>
+		<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Rock Paper Scissors</title>
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<h1> PRESS ROCK, PAPER or SCISSORS TO PLAY</h1>
+		<div class="resetButton"><p>RESET</p></div>
+		<div class="buttons">
+			<div data-key="R" class="button">
+				<img class="rock" src='./images/rock_100x100.png'></img>
+				<p>Rock</p>
+			</div>
+			<div data-key="P" class="button">
+				<img class="paper" src='./images/paper_100x100.jpg'></img>
+				<p>Paper</p>
+			</div>
+			<div data-key="S" class="button">
+				<img class="scissors" src='./images/scissors_100x100.png'></img>
+				<p>Scissors</p>
+			</div>
+		</div>
+		
+		<table class="outcome">
+			<tr>
+				<th>Round</th><th>Player</th><th>CPU</th><th>Winner</th>
+			</tr>
+			<tr>
+				<td>Last Played</td><td id="playerSelection">-</td><td id="CPUSelection">-</td><td id="winner">-</td>
+			</tr>
+		</table>
+		
+		<table class="results">
+			<tr>
+				<th>Total</th><th>Player</th><th>CPU</th>
+			</tr>
+			<tr>
+				<td>Number of victories</td><td id="numberOfUserVictories">0</td></td><td id="numberOfCPUVictories">0</td>
+			</tr>
+		</table>
+		<audio data-key="R" src="sounds/rocks_1sec.wav"></audio>
+		<audio data-key="P" src="sounds/paper-rip.wav"></audio>
+		<audio data-key="S" src="sounds/scissors.wav"></audio>
+	</body>
+	<script src="./game.js"></script>
 </html>
